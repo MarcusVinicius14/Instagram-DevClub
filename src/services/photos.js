@@ -1,24 +1,21 @@
+import {createClient} from "pexels"
+
+const apiKey = import.meta.env.VITE_KEY_API_PEXELS;
+
+const client = createClient(apiKey)
 
 export const getPhotos = async (photosPerPage,callBack) =>{
-
-    const apiKey = import.meta.env.VITE_KEY_API_PEXELS;
-    const baseUrl = 'https://api.pexels.com/v1/curated'
-
     let response =[]
     try {
-        response = await fetch(`${baseUrl}?page=1&per_page=${photosPerPage}`,
-        {
-            method: "get",
-            headers: new Headers({
-                Authorization: apiKey
-            })
+        response = await client.photos.curated({
+            page:1,
+            per_page:photosPerPage,
         })
-        .then((response) => response.json())
-        .then((data) => data.photos)
+        return response.photos
     }catch (error) {
         console.log(error)
     }finally{
         callBack()
     }
-    return response;
+    return response
 }
